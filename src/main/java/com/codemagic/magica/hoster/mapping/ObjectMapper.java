@@ -18,74 +18,74 @@ import com.codemagic.magica.hoster.mapping.operation.Operation;
 
 @Component
 public class ObjectMapper {
-	private Properties	mappings	= new Properties();
-	private Properties	operations	= new Properties();
+   private Properties mappings   = new Properties();
+   private Properties operations = new Properties();
 
-	public void map(Object source, Object target, String configFile) throws ServiceHosterException {
-		try {
-			mappings.load(FileUtils.openInputStream(new File(configFile)));
-			operations.load(AppUtils.loadFromClasspath(Constants.OPERATIONS_PROPERTIES_FILE));
-			
-			for (Object key : mappings.keySet()) {
-				String destProperty = (String) key;
-				handleMapping(destProperty, source, target);
-			}
+   public void map(Object source, Object target, String configFile) throws ServiceHosterException {
+      try {
+         mappings.load(FileUtils.openInputStream(new File(configFile)));
+         operations.load(AppUtils.loadFromClasspath(Constants.OPERATIONS_PROPERTIES_FILE));
 
-		} catch (Exception e) {
-			ExceptionUtil.wrapAndThrowAsServiceHosterException(e);
-		}
-	}
-	
-	private void handleMapping(String destProperty, Object src, Object dest) throws Exception {
-		if (destProperty != null) {
-			System.out.println("Reading property : " + destProperty);
-			String propValue = mappings.getProperty(destProperty);
-			System.out.println("Value : " + propValue);
-			String[] fragments = propValue.split(" ");
-			if (fragments != null && fragments.length > 1) {
-				String operation = fragments[0];
-				System.out.println("Operation : " + operation);
-				String[] properties = fragments[1].split(",");
-				System.out.println("source Properties : " + Arrays.toString(properties));
-				// load operation class and perform the operation on properties.
-				String operationClass = (String) operations.get(operation);
-				if (operationClass != null) {
-					Operation instance = (Operation) Class.forName(operationClass).newInstance();
-					// Get Values of properties from Source Object.
-					List<String> values = new ArrayList<String>();
-					for (String srcProperty : properties) {
-						try {
-							if (srcProperty.startsWith("\"") && srcProperty.endsWith("\"")) {
-								String constValue = srcProperty.substring(1, srcProperty.length() - 1);
-								values.add(constValue);
-								System.out.println(srcProperty + " -> " + constValue);
-							} else {
-								String srcValue = (String) PropertyUtils.getNestedProperty(src, srcProperty);
-								values.add(srcValue);
-								System.out.println(srcProperty + " -> " + srcValue);
-							}
-						} catch (Exception e) {
-							System.err.println(e.getMessage());
-						}
+         for (Object key : mappings.keySet()) {
+            String destProperty = (String) key;
+            handleMapping(destProperty, source, target);
+         }
 
-					}
-					Object result = instance.operate(values.toArray());
-					System.out.println("After operation execution : " + destProperty + " -> " + result);
-					PropertyUtils.setNestedProperty(dest, destProperty, result);
-				}
-			} else {
-				String result = null;
-				// no operations defined.
-				if (propValue.startsWith("\"") && propValue.endsWith("\"")) {
-					result = propValue.substring(1, propValue.length() - 1);
-					System.out.println(propValue + " -> " + result);
-				} else {
-					result = (String) PropertyUtils.getNestedProperty(src, propValue);
-					System.out.println(destProperty + " -> " + result);
-				}
+      } catch (Exception e) {
+         ExceptionUtil.wrapAndThrowAsServiceHosterException(e);
+      }
+   }
 
-				PropertyUtils.setNestedProperty(dest, destProperty, result);
-			}
-		}
-	}
+   private void handleMapping(String destProperty, Object src, Object dest) throws Exception {
+      if (destProperty != null) {
+         System.out.println("Reading property : " + destProperty);
+         String propValue = mappings.getProperty(destProperty);
+         System.out.println("Value : " + propValue);
+         String[] fragments = propValue.split(" ");
+         if (fragments != null && fragments.length > 1) {
+            String operation = fragments[0];
+            System.out.println("Operation : " + operation);
+            String[] properties = fragments[1].split(",");
+            System.out.println("source Properties : " + Arrays.toString(properties));
+            // load operation class and perform the operation on properties.
+            String operationClass = (String) operations.get(operation);
+            if (operationClass != null) {
+               Operation instance = (Operation) Class.forName(operationClass).newInstance();
+               // Get Values of properties from Source Object.
+               List<String> values = new ArrayList<String>();
+               for (String srcProperty : properties) {
+                  try {
+                     if (srcProperty.startsWith("\"") && srcProperty.endsWith("\"")) {
+                        String constValue = srcProperty.substring(1, srcProperty.length() - 1);
+                        values.add(constValue);
+                        System.out.println(srcProperty + " -> " + constValue);
+                     } else {
+                        String srcValue = (String) PropertyUtils.getNestedProperty(src, srcProperty);
+                        values.add(srcValue);
+                        System.out.println(srcProperty + " -> " + srcValue);
+                     }
+                  } catch (Exception e) {
+                     System.err.println(e.getMessage());
+                  }
+
+               }
+               Object result = instance.operate(values.toArray());
+               System.out.println("After operation execution : " + destProperty + " -> " + result);
+               PropertyUtils.setNestedProperty(dest, destProperty, result);
+            }
+         } else {
+            String result = null;
+            // no operations defined.
+            if (propValue.startsWith("\"") && propValue.endsWith("\"")) {
+               result = propValue.substring(1, propValue.length() - 1);
+               System.out.println(propValue + " -> " + result);
+            } else {
+               result = (String) PropertyUtils.getNestedProperty(src, propValue);
+               System.out.println(destProperty + " -> " + result);
+            }
+
+            PropertyUtils.setNestedProperty(dest, destProperty, result);
+         }
+      }
+   }
 }

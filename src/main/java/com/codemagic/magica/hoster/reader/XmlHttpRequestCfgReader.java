@@ -4,7 +4,6 @@ import static com.codemagic.magica.hoster.reader.XmlUtils.eval;
 import static com.codemagic.magica.hoster.reader.XmlUtils.getDocument;
 import static com.codemagic.magica.hoster.reader.XmlUtils.getNodes;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -20,72 +19,71 @@ import com.codemagic.magica.hoster.common.util.ExceptionUtil;
 import com.codemagic.magica.hoster.reader.HttpRequestConfig.HTTPMETHOD;
 
 public class XmlHttpRequestCfgReader {
-	private static final String	XPATH_URL		= "/cfg/url";
-	private static final String	XPATH_METHOD	= "/cfg/method";
-	private static final String	XPATH_BODY		= "/cfg/body";
-	private static final String	XPATH_PARAMS	= "/cfg/params/p";
-	private static final String	XPATH_HEADERS	= "/cfg/headers/h";
-	private static final String	XPATH_KEY		= "k";
-	private static final String	XPATH_VALUE		= "v";
+   private static final String XPATH_BODY    = "/cfg/body";
+   private static final String XPATH_HEADERS = "/cfg/headers/h";
+   private static final String XPATH_KEY     = "k";
+   private static final String XPATH_METHOD  = "/cfg/method";
+   private static final String XPATH_PARAMS  = "/cfg/params/p";
+   private static final String XPATH_URL     = "/cfg/url";
+   private static final String XPATH_VALUE   = "v";
 
-	public HttpRequestConfig parse(InputSource source) throws ServiceHosterException {
-		HttpRequestConfig cfg = new HttpRequestConfig();
-		if (source != null) {
-			try {
-				Document doc = getDocument(source);
-				// URL
-				cfg.setUrl(eval(doc, XPATH_URL));
+   public HttpRequestConfig parse(InputSource source) throws ServiceHosterException {
+      HttpRequestConfig cfg = new HttpRequestConfig();
+      if (source != null) {
+         try {
+            Document doc = getDocument(source);
+            // URL
+            cfg.setUrl(eval(doc, XPATH_URL));
 
-				// HTTP Method
-				cfg.setHttpMethod(HTTPMETHOD.valueOf(eval(doc, XPATH_METHOD)));
+            // HTTP Method
+            cfg.setHttpMethod(HTTPMETHOD.valueOf(eval(doc, XPATH_METHOD)));
 
-				// HTTP Parameters.
-				NodeList params = getNodes(doc, XPATH_PARAMS);
-				if (params != null) {
-					int count = params.getLength();
-					HashMap<String, String> parameters = new LinkedHashMap<String, String>();
-					for (int i = 0; i < count; ++i) {
-						Node param = params.item(i);
-						parameters.put(eval(param, XPATH_KEY), eval(param, XPATH_VALUE));
-					}
-					if (!parameters.isEmpty()) {
-						cfg.setQueryParameters(parameters);
-					}
-				}
+            // HTTP Parameters.
+            NodeList params = getNodes(doc, XPATH_PARAMS);
+            if (params != null) {
+               int count = params.getLength();
+               HashMap<String, String> parameters = new LinkedHashMap<String, String>();
+               for (int i = 0; i < count; ++i) {
+                  Node param = params.item(i);
+                  parameters.put(eval(param, XPATH_KEY), eval(param, XPATH_VALUE));
+               }
+               if (!parameters.isEmpty()) {
+                  cfg.setQueryParameters(parameters);
+               }
+            }
 
-				// HTTP Headers.
-				NodeList hdrNodes = getNodes(doc, XPATH_HEADERS);
-				if (hdrNodes != null) {
-					int count = hdrNodes.getLength();
-					HashMap<String, String> headers = new LinkedHashMap<String, String>();
-					for (int i = 0; i < count; ++i) {
-						Node hdr = hdrNodes.item(i);
-						headers.put(eval(hdr, XPATH_KEY), eval(hdr, XPATH_VALUE));
-					}
-					if (!headers.isEmpty()) {
-						cfg.setRequestHeaders(headers);
-					}
-				}
+            // HTTP Headers.
+            NodeList hdrNodes = getNodes(doc, XPATH_HEADERS);
+            if (hdrNodes != null) {
+               int count = hdrNodes.getLength();
+               HashMap<String, String> headers = new LinkedHashMap<String, String>();
+               for (int i = 0; i < count; ++i) {
+                  Node hdr = hdrNodes.item(i);
+                  headers.put(eval(hdr, XPATH_KEY), eval(hdr, XPATH_VALUE));
+               }
+               if (!headers.isEmpty()) {
+                  cfg.setRequestHeaders(headers);
+               }
+            }
 
-				// POST Body if any
-				cfg.setRequestBody(eval(doc, XPATH_BODY));
+            // POST Body if any
+            cfg.setRequestBody(eval(doc, XPATH_BODY));
 
-			} catch (Exception e) {
-				ExceptionUtil.wrapAndThrowAsServiceHosterException(e);
-			} finally {
-				if (source != null) {
-					AppUtils.closeStream(source.getByteStream());
-				}
-			}
-		}
-		return cfg;
-	}
+         } catch (Exception e) {
+            ExceptionUtil.wrapAndThrowAsServiceHosterException(e);
+         } finally {
+            if (source != null) {
+               AppUtils.closeStream(source.getByteStream());
+            }
+         }
+      }
+      return cfg;
+   }
 
-	public static void main(String[] args) throws Exception {
-		InputStream stream = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("http.soap.xml");
-		HttpRequestConfig cfg = new XmlHttpRequestCfgReader().parse(new InputSource(stream));
-		System.out.println(cfg);
-		System.out.println(new HttpReader().read(cfg));
-	}
+   public static void main(String[] args) throws Exception {
+      InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("http.soap.xml");
+      HttpRequestConfig cfg = new XmlHttpRequestCfgReader().parse(new InputSource(stream));
+      System.out.println(cfg);
+      System.out.println(new HttpReader().read(cfg));
+   }
 }

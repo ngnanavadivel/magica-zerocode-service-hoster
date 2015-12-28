@@ -2,49 +2,49 @@ package com.codemagic.magica.hoster.model;
 
 public class Fragment {
 
-	public enum FragmentType {
-		RESOURCE_DISCRIMINATOR, RESOURCE_ID
-	};
+   public enum FragmentType {
+      RESOURCE_DISCRIMINATOR, RESOURCE_ID
+   };
 
-	public enum GoesAsType {
-		QUERY_PARAMETER, PATH_FRAGMENT
-	};
+   public enum GoesAsType {
+      PATH_FRAGMENT, QUERY_PARAMETER
+   };
 
-	private int				index;
-	private FragmentType	type;
-	private GoesAsType			goesAs;
-	private String			name;
+   private GoesAsType   goesAs;
+   private int          index;
+   private String       name;
+   private FragmentType type;
 
-	public FragmentType getType() {
-		return type;
-	}
+   public GoesAsType getGoesAs() {
+      return goesAs;
+   }
 
-	public void setType(FragmentType type) {
-		this.type = type;
-	}
+   public int getIndex() {
+      return index;
+   }
 
-	public GoesAsType getGoesAs() {
-		return goesAs;
-	}
+   public String getName() {
+      return name;
+   }
 
-	public void setGoesAs(GoesAsType goesAs) {
-		this.goesAs = goesAs;
-	}
+   public FragmentType getType() {
+      return type;
+   }
 
-	public String getName() {
-		return name;
-	}
+   public void setGoesAs(GoesAsType goesAs) {
+      this.goesAs = goesAs;
+   }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+   public void setIndex(int index) {
+      this.index = index;
+   }
 
-	public int getIndex() {
-		return index;
-	}
+   public void setName(String name) {
+      this.name = name;
+   }
 
-	public void setIndex(int index) {
-		this.index = index;
-	}
+   public void setType(FragmentType type) {
+      this.type = type;
+   }
 
 }

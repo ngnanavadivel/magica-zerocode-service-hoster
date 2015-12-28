@@ -9,5 +9,6 @@ import com.codemagic.magica.hoster.model.UrlMappingConfig;
 
 @Component
 public interface EndpointReader {
-	String read(String configFile, List<String> uriFragments, UrlMappingConfig inputMpgCfg) throws ServiceHosterException;
+   String read(String configFile, List<String> uriFragments, UrlMappingConfig inputMpgCfg)
+         throws ServiceHosterException;
 }

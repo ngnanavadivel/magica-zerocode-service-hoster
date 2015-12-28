@@ -21,56 +21,59 @@ import com.codemagic.magica.hoster.reader.XmlUtils;
 @Component("local")
 public class LocalFileServiceConfigDAO implements ServiceConfigurationDAO {
 
-	@Autowired
-	WorkspaceManager wkspaceMgr;
+   @Autowired
+   WorkspaceManager wkspaceMgr;
 
-	public ServiceConfiguration load(String clientId, String serviceId, String version, String resourceDiscriminator) throws ServiceHosterException {
-		ServiceConfiguration svcConfig = null;
-		FileInputStream stream = null;
-		try {
-			wkspaceMgr.init(clientId, serviceId, version, resourceDiscriminator);
-			File cfg = new File(wkspaceMgr.getServiceConfigFile());
-			if (cfg.exists()) {
-				svcConfig = new ServiceConfiguration();
-				stream = new FileInputStream(cfg);
-				Document document = XmlUtils.getDocument(new InputSource(stream));
-				if (document != null) {
-					svcConfig.setJarLocation(XmlUtils.eval(document, "/service-cfg/runtime-cfg/jar-location"));
-					
-					svcConfig.setObjectMappingLocation(XmlUtils.eval(document, "/service-cfg/runtime-cfg/object-mapping-location"));
-					svcConfig.setUrlMappingLocation(XmlUtils.eval(document, "/service-cfg/runtime-cfg/url-mapping-location"));
+   public ServiceConfiguration load(String clientId, String serviceId, String version, String resourceDiscriminator)
+         throws ServiceHosterException {
+      ServiceConfiguration svcConfig = null;
+      FileInputStream stream = null;
+      try {
+         wkspaceMgr.init(clientId, serviceId, version, resourceDiscriminator);
+         File cfg = new File(wkspaceMgr.getServiceConfigFile());
+         if (cfg.exists()) {
+            svcConfig = new ServiceConfiguration();
+            stream = new FileInputStream(cfg);
+            Document document = XmlUtils.getDocument(new InputSource(stream));
+            if (document != null) {
+               svcConfig.setJarLocation(XmlUtils.eval(document, "/service-cfg/runtime-cfg/jar-location"));
 
-					svcConfig.setSourcePackage(XmlUtils.eval(document, "/service-cfg/runtime-cfg/source/package"));
-					svcConfig.setTargetPackage(XmlUtils.eval(document, "/service-cfg/runtime-cfg/target/package"));
+               svcConfig.setObjectMappingLocation(XmlUtils.eval(document,
+                     "/service-cfg/runtime-cfg/object-mapping-location"));
+               svcConfig.setUrlMappingLocation(XmlUtils.eval(document,
+                     "/service-cfg/runtime-cfg/url-mapping-location"));
 
-					svcConfig.setSourceClassName(XmlUtils.eval(document, "/service-cfg/runtime-cfg/source/class"));
-					svcConfig.setTargetClassName(XmlUtils.eval(document, "/service-cfg/runtime-cfg/target/class"));
+               svcConfig.setSourcePackage(XmlUtils.eval(document, "/service-cfg/runtime-cfg/source/package"));
+               svcConfig.setTargetPackage(XmlUtils.eval(document, "/service-cfg/runtime-cfg/target/package"));
 
-					svcConfig.setSourceEndpointType(EndpointType
-							.valueOf(XmlUtils.eval(document, "/service-cfg/runtime-cfg/source/endpoint/type")));
-					svcConfig.setTargetEndpointType(EndpointType
-							.valueOf(XmlUtils.eval(document, "/service-cfg/runtime-cfg/target/endpoint/type")));
+               svcConfig.setSourceClassName(XmlUtils.eval(document, "/service-cfg/runtime-cfg/source/class"));
+               svcConfig.setTargetClassName(XmlUtils.eval(document, "/service-cfg/runtime-cfg/target/class"));
 
-					svcConfig.setSourceDataFormat(DataFormat
-							.valueOf(XmlUtils.eval(document, "/service-cfg/runtime-cfg/source/endpoint/format")));
-					svcConfig.setTargetDataFormat(DataFormat
-							.valueOf(XmlUtils.eval(document, "/service-cfg/runtime-cfg/target/endpoint/format")));
+               svcConfig.setSourceEndpointType(EndpointType.valueOf(XmlUtils.eval(document,
+                     "/service-cfg/runtime-cfg/source/endpoint/type")));
+               svcConfig.setTargetEndpointType(EndpointType.valueOf(XmlUtils.eval(document,
+                     "/service-cfg/runtime-cfg/target/endpoint/type")));
 
-					svcConfig.setSourceEndpointConfigLocation(
-							XmlUtils.eval(document, "/service-cfg/runtime-cfg/source/endpoint/cfg-location"));
-					svcConfig.setTargetEndpointConfigLocation(
-							XmlUtils.eval(document, "/service-cfg/runtime-cfg/target/endpoint/cfg-location"));
-				}
+               svcConfig.setSourceDataFormat(DataFormat.valueOf(XmlUtils.eval(document,
+                     "/service-cfg/runtime-cfg/source/endpoint/format")));
+               svcConfig.setTargetDataFormat(DataFormat.valueOf(XmlUtils.eval(document,
+                     "/service-cfg/runtime-cfg/target/endpoint/format")));
 
-			} else {
-				ExceptionUtil.throwAsServiceHosterException(Constants.SERVICE_CFG_XML_FILE + " doesn't exist.");
-			}
-		} catch (Throwable t) {
-			ExceptionUtil.wrapAndThrowAsServiceHosterException(t);
-		} finally {
-			AppUtils.closeStream(stream);
-		}
-		return svcConfig;
-	}
+               svcConfig.setSourceEndpointConfigLocation(XmlUtils.eval(document,
+                     "/service-cfg/runtime-cfg/source/endpoint/cfg-location"));
+               svcConfig.setTargetEndpointConfigLocation(XmlUtils.eval(document,
+                     "/service-cfg/runtime-cfg/target/endpoint/cfg-location"));
+            }
+
+         } else {
+            ExceptionUtil.throwAsServiceHosterException(Constants.SERVICE_CFG_XML_FILE + " doesn't exist.");
+         }
+      } catch (Throwable t) {
+         ExceptionUtil.wrapAndThrowAsServiceHosterException(t);
+      } finally {
+         AppUtils.closeStream(stream);
+      }
+      return svcConfig;
+   }
 
 }

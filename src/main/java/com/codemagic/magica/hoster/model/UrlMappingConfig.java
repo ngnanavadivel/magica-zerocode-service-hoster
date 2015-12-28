@@ -5,32 +5,32 @@ import java.util.List;
 import com.codemagic.magica.hoster.model.ServiceConfiguration.EndpointType;
 
 public class UrlMappingConfig {
-	private boolean			dynamicInputURI;
-	private EndpointType	readerType;
-	private List<Fragment>	fragments;
+   private boolean        dynamicInputURI;
+   private List<Fragment> fragments;
+   private EndpointType   readerType;
 
-	public boolean isDynamicInputURI() {
-		return dynamicInputURI;
-	}
+   public List<Fragment> getFragments() {
+      return fragments;
+   }
 
-	public void setDynamicInputURI(boolean dynamicInputURI) {
-		this.dynamicInputURI = dynamicInputURI;
-	}
+   public EndpointType getReaderType() {
+      return readerType;
+   }
 
-	public EndpointType getReaderType() {
-		return readerType;
-	}
+   public boolean isDynamicInputURI() {
+      return dynamicInputURI;
+   }
 
-	public void setReaderType(EndpointType readerType) {
-		this.readerType = readerType;
-	}
+   public void setDynamicInputURI(boolean dynamicInputURI) {
+      this.dynamicInputURI = dynamicInputURI;
+   }
 
-	public List<Fragment> getFragments() {
-		return fragments;
-	}
+   public void setFragments(List<Fragment> fragments) {
+      this.fragments = fragments;
+   }
 
-	public void setFragments(List<Fragment> fragments) {
-		this.fragments = fragments;
-	}
+   public void setReaderType(EndpointType readerType) {
+      this.readerType = readerType;
+   }
 
 }

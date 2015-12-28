@@ -22,42 +22,42 @@ import com.codemagic.magica.hoster.reader.XmlUtils;
 
 @Component
 public class UrlMappingParser {
-	public UrlMappingConfig parse(String urlMappingfile) throws ServiceHosterException {
-		UrlMappingConfig cfg = new UrlMappingConfig();
-		try {
-			Document document = XmlUtils.getDocument(AppUtils.createInputSource(urlMappingfile));
+   public UrlMappingConfig parse(String urlMappingfile) throws ServiceHosterException {
+      UrlMappingConfig cfg = new UrlMappingConfig();
+      try {
+         Document document = XmlUtils.getDocument(AppUtils.createInputSource(urlMappingfile));
 
-			cfg.setDynamicInputURI(Boolean.parseBoolean(XmlUtils.eval(document, "/url-mpg/dynamic-uri-content")));
+         cfg.setDynamicInputURI(Boolean.parseBoolean(XmlUtils.eval(document, "/url-mpg/dynamic-uri-content")));
 
-			cfg.setReaderType(EndpointType.valueOf(XmlUtils.eval(document, "/url-mpg/reader-type")));
+         cfg.setReaderType(EndpointType.valueOf(XmlUtils.eval(document, "/url-mpg/reader-type")));
 
-			NodeList nodes = XmlUtils.getNodes(document, "/url-mpg/path-fragment-map/fragment");
-			int length = nodes.getLength();
-			List<Fragment> fragments = new ArrayList<Fragment>();
-			for (int i = 0; i < length; ++i) {
-				Fragment fragment = new Fragment();
-				Element node = (Element) nodes.item(i);
-				fragment.setIndex(Integer.parseInt(node.getAttribute("index")));
-				fragment.setType(FragmentType.valueOf(node.getAttribute("type")));
-				if (fragment.getType() == FragmentType.RESOURCE_ID) {
-					fragment.setGoesAs(GoesAsType.valueOf(XmlUtils.eval(node, "reader-cfg/goesAs")));
-					fragment.setName(XmlUtils.eval(node, "reader-cfg/name"));
-				}
-				fragments.add(fragment);
-			}
-			if (!fragments.isEmpty()) {
-				Collections.sort(fragments, new Comparator<Fragment>() {
+         NodeList nodes = XmlUtils.getNodes(document, "/url-mpg/path-fragment-map/fragment");
+         int length = nodes.getLength();
+         List<Fragment> fragments = new ArrayList<Fragment>();
+         for (int i = 0; i < length; ++i) {
+            Fragment fragment = new Fragment();
+            Element node = (Element) nodes.item(i);
+            fragment.setIndex(Integer.parseInt(node.getAttribute("index")));
+            fragment.setType(FragmentType.valueOf(node.getAttribute("type")));
+            if (fragment.getType() == FragmentType.RESOURCE_ID) {
+               fragment.setGoesAs(GoesAsType.valueOf(XmlUtils.eval(node, "reader-cfg/goesAs")));
+               fragment.setName(XmlUtils.eval(node, "reader-cfg/name"));
+            }
+            fragments.add(fragment);
+         }
+         if (!fragments.isEmpty()) {
+            Collections.sort(fragments, new Comparator<Fragment>() {
 
-					public int compare(Fragment o1, Fragment o2) {
-						return o1.getIndex() - o2.getIndex();
-					}
+               public int compare(Fragment o1, Fragment o2) {
+                  return o1.getIndex() - o2.getIndex();
+               }
 
-				});
-			}
-			cfg.setFragments(fragments);
-		} catch (Exception e) {
-			ExceptionUtil.wrapAndThrowAsServiceHosterException(e);
-		}
-		return cfg;
-	}
+            });
+         }
+         cfg.setFragments(fragments);
+      } catch (Exception e) {
+         ExceptionUtil.wrapAndThrowAsServiceHosterException(e);
+      }
+      return cfg;
+   }
 }

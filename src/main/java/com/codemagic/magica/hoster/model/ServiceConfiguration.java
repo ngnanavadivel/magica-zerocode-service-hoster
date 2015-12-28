@@ -1,130 +1,130 @@
 package com.codemagic.magica.hoster.model;
 
 public class ServiceConfiguration {
-	public enum EndpointType {
-		HTTP, FTP, JMS
-	};
+   public enum DataFormat {
+      FLAT, JSON, XML
+   };
 
-	public enum DataFormat {
-		XML, JSON, FLAT
-	};
+   public enum EndpointType {
+      FTP, HTTP, JMS
+   };
 
-	private String			jarLocation;
-	private String			objectMappingLocation;
-	private String			urlMappingLocation;
-	private String			sourcePackage;
-	private String			sourceClassName;
-	private EndpointType	sourceEndpointType;
-	private DataFormat		sourceDataFormat;
-	private String			sourceEndpointConfigLocation;
-	private String			targetPackage;
-	private String			targetClassName;
-	private EndpointType	targetEndpointType;
-	private DataFormat		targetDataFormat;
-	private String			targetEndpointConfigLocation;
+   private String       jarLocation;
+   private String       objectMappingLocation;
+   private String       sourceClassName;
+   private DataFormat   sourceDataFormat;
+   private String       sourceEndpointConfigLocation;
+   private EndpointType sourceEndpointType;
+   private String       sourcePackage;
+   private String       targetClassName;
+   private DataFormat   targetDataFormat;
+   private String       targetEndpointConfigLocation;
+   private EndpointType targetEndpointType;
+   private String       targetPackage;
+   private String       urlMappingLocation;
 
-	public String getJarLocation() {
-		return jarLocation;
-	}
+   public String getJarLocation() {
+      return jarLocation;
+   }
 
-	public void setJarLocation(String jarLocation) {
-		this.jarLocation = jarLocation;
-	}
+   public String getObjectMappingLocation() {
+      return objectMappingLocation;
+   }
 
-	public EndpointType getSourceEndpointType() {
-		return sourceEndpointType;
-	}
+   public String getSourceClassName() {
+      return sourceClassName;
+   }
 
-	public void setSourceEndpointType(EndpointType sourceEndpointType) {
-		this.sourceEndpointType = sourceEndpointType;
-	}
+   public DataFormat getSourceDataFormat() {
+      return sourceDataFormat;
+   }
 
-	public DataFormat getSourceDataFormat() {
-		return sourceDataFormat;
-	}
+   public String getSourceEndpointConfigLocation() {
+      return sourceEndpointConfigLocation;
+   }
 
-	public void setSourceDataFormat(DataFormat sourceDataFormat) {
-		this.sourceDataFormat = sourceDataFormat;
-	}
+   public EndpointType getSourceEndpointType() {
+      return sourceEndpointType;
+   }
 
-	public String getSourceEndpointConfigLocation() {
-		return sourceEndpointConfigLocation;
-	}
+   public String getSourcePackage() {
+      return sourcePackage;
+   }
 
-	public void setSourceEndpointConfigLocation(String sourceEndpointConfigLocation) {
-		this.sourceEndpointConfigLocation = sourceEndpointConfigLocation;
-	}
+   public String getTargetClassName() {
+      return targetClassName;
+   }
 
-	public EndpointType getTargetEndpointType() {
-		return targetEndpointType;
-	}
+   public DataFormat getTargetDataFormat() {
+      return targetDataFormat;
+   }
 
-	public void setTargetEndpointType(EndpointType targetEndpointType) {
-		this.targetEndpointType = targetEndpointType;
-	}
+   public String getTargetEndpointConfigLocation() {
+      return targetEndpointConfigLocation;
+   }
 
-	public DataFormat getTargetDataFormat() {
-		return targetDataFormat;
-	}
+   public EndpointType getTargetEndpointType() {
+      return targetEndpointType;
+   }
 
-	public void setTargetDataFormat(DataFormat targetDataFormat) {
-		this.targetDataFormat = targetDataFormat;
-	}
+   public String getTargetPackage() {
+      return targetPackage;
+   }
 
-	public String getTargetEndpointConfigLocation() {
-		return targetEndpointConfigLocation;
-	}
+   public String getUrlMappingLocation() {
+      return urlMappingLocation;
+   }
 
-	public void setTargetEndpointConfigLocation(String targetEndpointConfigLocation) {
-		this.targetEndpointConfigLocation = targetEndpointConfigLocation;
-	}
+   public void setJarLocation(String jarLocation) {
+      this.jarLocation = jarLocation;
+   }
 
-	public String getSourceClassName() {
-		return sourceClassName;
-	}
+   public void setObjectMappingLocation(String objectMappingLocation) {
+      this.objectMappingLocation = objectMappingLocation;
+   }
 
-	public void setSourceClassName(String sourceClassName) {
-		this.sourceClassName = sourceClassName;
-	}
+   public void setSourceClassName(String sourceClassName) {
+      this.sourceClassName = sourceClassName;
+   }
 
-	public String getTargetClassName() {
-		return targetClassName;
-	}
+   public void setSourceDataFormat(DataFormat sourceDataFormat) {
+      this.sourceDataFormat = sourceDataFormat;
+   }
 
-	public void setTargetClassName(String targetClassName) {
-		this.targetClassName = targetClassName;
-	}
+   public void setSourceEndpointConfigLocation(String sourceEndpointConfigLocation) {
+      this.sourceEndpointConfigLocation = sourceEndpointConfigLocation;
+   }
 
-	public String getSourcePackage() {
-		return sourcePackage;
-	}
+   public void setSourceEndpointType(EndpointType sourceEndpointType) {
+      this.sourceEndpointType = sourceEndpointType;
+   }
 
-	public void setSourcePackage(String sourcePackage) {
-		this.sourcePackage = sourcePackage;
-	}
+   public void setSourcePackage(String sourcePackage) {
+      this.sourcePackage = sourcePackage;
+   }
 
-	public String getTargetPackage() {
-		return targetPackage;
-	}
+   public void setTargetClassName(String targetClassName) {
+      this.targetClassName = targetClassName;
+   }
 
-	public void setTargetPackage(String targetPackage) {
-		this.targetPackage = targetPackage;
-	}
+   public void setTargetDataFormat(DataFormat targetDataFormat) {
+      this.targetDataFormat = targetDataFormat;
+   }
 
-	public String getObjectMappingLocation() {
-		return objectMappingLocation;
-	}
+   public void setTargetEndpointConfigLocation(String targetEndpointConfigLocation) {
+      this.targetEndpointConfigLocation = targetEndpointConfigLocation;
+   }
 
-	public void setObjectMappingLocation(String objectMappingLocation) {
-		this.objectMappingLocation = objectMappingLocation;
-	}
+   public void setTargetEndpointType(EndpointType targetEndpointType) {
+      this.targetEndpointType = targetEndpointType;
+   }
 
-	public String getUrlMappingLocation() {
-		return urlMappingLocation;
-	}
+   public void setTargetPackage(String targetPackage) {
+      this.targetPackage = targetPackage;
+   }
 
-	public void setUrlMappingLocation(String urlMappingLocation) {
-		this.urlMappingLocation = urlMappingLocation;
-	}
+   public void setUrlMappingLocation(String urlMappingLocation) {
+      this.urlMappingLocation = urlMappingLocation;
+   }
 
 }

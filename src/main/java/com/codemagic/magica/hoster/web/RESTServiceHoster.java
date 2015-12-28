@@ -1,6 +1,5 @@
 package com.codemagic.magica.hoster.web;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,118 +15,116 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.xeustechnologies.jcl.JarClassLoader;
 import org.xeustechnologies.jcl.JclObjectFactory;
 
-import com.codemagic.magica.hoster.common.Constants;
 import com.codemagic.magica.hoster.common.util.WorkspaceUtils;
 import com.codemagic.magica.hoster.mapping.ObjectMapper;
-import com.codemagic.magica.hoster.model.UrlMappingConfig;
 import com.codemagic.magica.hoster.model.ServiceConfiguration;
+import com.codemagic.magica.hoster.model.UrlMappingConfig;
 import com.codemagic.magica.hoster.service.DataMarshaller;
 import com.codemagic.magica.hoster.service.DataUnMarshaller;
 import com.codemagic.magica.hoster.service.EndpointReader;
 import com.codemagic.magica.hoster.service.EndpointReaderFactory;
-import com.codemagic.magica.hoster.service.UrlMappingParser;
 import com.codemagic.magica.hoster.service.MarshallerFactory;
 import com.codemagic.magica.hoster.service.ServiceConfigManager;
 import com.codemagic.magica.hoster.service.UnMarshallerFactory;
+import com.codemagic.magica.hoster.service.UrlMappingParser;
 
 @Controller
 @RequestMapping("/")
 public class RESTServiceHoster {
-	@Autowired
-	ServiceConfigManager serviceCfgMgr;
-	
-	@Autowired
-	UrlMappingParser inputMpgParser;
+   @Autowired
+   UrlMappingParser inputMpgParser;
 
-	@Autowired
-	EndpointReaderFactory readerFactory;
+   @Autowired
+   ObjectMapper mapper;
 
-	@Autowired
-	UnMarshallerFactory unMarshallerFactory;
+   @Autowired
+   MarshallerFactory marshallerFactory;
 
-	@Autowired
-	ObjectMapper mapper;
+   @Autowired
+   EndpointReaderFactory readerFactory;
 
-	@Autowired
-	MarshallerFactory marshallerFactory;
+   @Autowired
+   ServiceConfigManager serviceCfgMgr;
 
-	@RequestMapping(value = "{clientId}/{serviceId}/{version}/**",
-					method = RequestMethod.GET,
-					produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,
-							MediaType.TEXT_PLAIN_VALUE })
-	public @ResponseBody String process(@PathVariable("clientId") String clientId,
-										@PathVariable("serviceId") String serviceId,
-										@PathVariable("version") String version,
-										HttpServletRequest request,
-										HttpServletResponse response) {
-		String data = null;
+   @Autowired
+   UnMarshallerFactory unMarshallerFactory;
 
-		try {
+   @RequestMapping(value = "{clientId}/{serviceId}/{version}/**",
+                   method = RequestMethod.GET,
+                   produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,
+                         MediaType.TEXT_PLAIN_VALUE })
+   public @ResponseBody String process(@PathVariable("clientId") String clientId,
+                                       @PathVariable("serviceId") String serviceId,
+                                       @PathVariable("version") String version,
+                                       HttpServletRequest request,
+                                       HttpServletResponse response) {
+      String data = null;
 
-			// 0. Identify Service's Resource discriminator based on path fragment Hierarchy.
-			List<String> uriFragments = WorkspaceUtils.getAllURIFragments(request.getRequestURI(), request.getContextPath(), clientId, serviceId, version);
-			String resourceDiscriminatorPath = WorkspaceUtils.getResourceDiscriminatorsAsPath(uriFragments);
+      try {
 
-			// 1. Load Service Configuration
-			ServiceConfiguration serviceConfig = serviceCfgMgr.load(clientId, serviceId, version, resourceDiscriminatorPath);
+         // 0. Identify Service's Resource discriminator based on path fragment Hierarchy.
+         List<String> uriFragments = WorkspaceUtils.getAllURIFragments(request.getRequestURI(), request
+               .getContextPath(), clientId, serviceId, version);
+         String resourceDiscriminatorPath = WorkspaceUtils.getResourceDiscriminatorsAsPath(uriFragments);
 
-			// 2. ClassLoad the JAR file
-			String jarLocation = serviceConfig.getJarLocation();
-			JarClassLoader classLoader = new JarClassLoader();
-			classLoader.add(jarLocation);
-			
-			// 2.5. Read Input URI data mappings which serves as the driving criteria for the Reader.
-			UrlMappingConfig urlMpgCfg = inputMpgParser.parse(serviceConfig.getUrlMappingLocation());
+         // 1. Load Service Configuration
+         ServiceConfiguration serviceConfig = serviceCfgMgr.load(clientId, serviceId, version,
+               resourceDiscriminatorPath);
 
-			// 3. Get Request Data from the source endpoint using appropriate
-			// Reader.
-			EndpointReader reader = readerFactory.getReader(serviceConfig.getSourceEndpointType());
-			String requestData = reader.read(serviceConfig.getSourceEndpointConfigLocation(), uriFragments, urlMpgCfg);
+         // 2. ClassLoad the JAR file
+         String jarLocation = serviceConfig.getJarLocation();
+         JarClassLoader classLoader = new JarClassLoader();
+         classLoader.add(jarLocation);
 
-			// 4. Convert request Data into a POJO using appropriate
-			// UnMarshaller.
-			DataUnMarshaller unMarshaller = unMarshallerFactory.getUnMarshaller(serviceConfig.getSourceDataFormat());
-			Object sourcePojo = unMarshaller.convertToPOJO(requestData, serviceConfig.getSourcePackage(), serviceConfig
-					.getSourceClassName(), classLoader);
+         // 2.5. Read Input URI data mappings which serves as the driving criteria for the Reader.
+         UrlMappingConfig urlMpgCfg = inputMpgParser.parse(serviceConfig.getUrlMappingLocation());
 
-			// 5. Instantiate a blank Target object.
-			Object targetPojo = JclObjectFactory.getInstance().create(classLoader, serviceConfig.getTargetPackage()
-																					+ "."
-																					+ serviceConfig
-																							.getTargetClassName());
+         // 3. Get Request Data from the source endpoint using appropriate
+         // Reader.
+         EndpointReader reader = readerFactory.getReader(serviceConfig.getSourceEndpointType());
+         String requestData = reader.read(serviceConfig.getSourceEndpointConfigLocation(), uriFragments, urlMpgCfg);
 
-			// 6. Perform Source to Target property mapping.
-			mapper.map(sourcePojo, targetPojo, serviceConfig.getObjectMappingLocation());
+         // 4. Convert request Data into a POJO using appropriate
+         // UnMarshaller.
+         DataUnMarshaller unMarshaller = unMarshallerFactory.getUnMarshaller(serviceConfig.getSourceDataFormat());
+         Object sourcePojo = unMarshaller.convertToPOJO(requestData, serviceConfig.getSourcePackage(), serviceConfig
+               .getSourceClassName(), classLoader);
 
-			// 7. Convert Target object to Response DataFormat.
-			DataMarshaller marshaller = marshallerFactory.getMarshaller(serviceConfig.getTargetDataFormat());
-			data = marshaller.serializeToString(targetPojo);
+         // 5. Instantiate a blank Target object.
+         Object targetPojo = JclObjectFactory.getInstance().create(classLoader, serviceConfig.getTargetPackage()
+                                                                                + "."
+                                                                                + serviceConfig.getTargetClassName());
 
-			// 8. Push the response to target endpoint using appropriate Writer.
-			// Yet to be implemented.
+         // 6. Perform Source to Target property mapping.
+         mapper.map(sourcePojo, targetPojo, serviceConfig.getObjectMappingLocation());
 
-			// 9. Set ContentType Response Header.
-			updateContentType(response, serviceConfig);
+         // 7. Convert Target object to Response DataFormat.
+         DataMarshaller marshaller = marshallerFactory.getMarshaller(serviceConfig.getTargetDataFormat());
+         data = marshaller.serializeToString(targetPojo);
 
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
+         // 8. Push the response to target endpoint using appropriate Writer.
+         // Yet to be implemented.
 
-		return data;
-	}
+         // 9. Set ContentType Response Header.
+         updateContentType(response, serviceConfig);
 
-	
+      } catch (Throwable t) {
+         t.printStackTrace();
+      }
 
-	private void updateContentType(HttpServletResponse resp, ServiceConfiguration serviceConfig) {
-		switch (serviceConfig.getTargetDataFormat()) {
-			case XML:
-				resp.setContentType("application/xml");
-				break;
-			case JSON:
-				resp.setContentType("application/json");
-				break;
-			default:
-				resp.setContentType("text/plain");
-		}
-	}
+      return data;
+   }
+
+   private void updateContentType(HttpServletResponse resp, ServiceConfiguration serviceConfig) {
+      switch (serviceConfig.getTargetDataFormat()) {
+         case XML:
+            resp.setContentType("application/xml");
+            break;
+         case JSON:
+            resp.setContentType("application/json");
+            break;
+         default:
+            resp.setContentType("text/plain");
+      }
+   }
 }

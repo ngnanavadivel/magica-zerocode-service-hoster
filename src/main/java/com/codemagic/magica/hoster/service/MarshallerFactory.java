@@ -9,30 +9,30 @@ import com.codemagic.magica.hoster.model.ServiceConfiguration.DataFormat;
 
 @Component
 public class MarshallerFactory {
-	@Autowired
-	XMLMarshaller xmlMarshaller;
+   @Autowired
+   JSONMarshaller jsonMarshaller;
 
-	@Autowired
-	JSONMarshaller jsonMarshaller;
+   @Autowired
+   XMLMarshaller xmlMarshaller;
 
-	public DataMarshaller getMarshaller(DataFormat fmt) throws ServiceHosterException {
-		DataMarshaller marshaller = null;
-		switch (fmt) {
-			case XML:
-				marshaller = xmlMarshaller;
-				break;
-			case JSON:
-				marshaller = jsonMarshaller;
-				break;
-			case FLAT:
-				halt(fmt);
-			default:
-				halt(fmt);
-		}
-		return marshaller;
-	}
+   public DataMarshaller getMarshaller(DataFormat fmt) throws ServiceHosterException {
+      DataMarshaller marshaller = null;
+      switch (fmt) {
+         case XML:
+            marshaller = xmlMarshaller;
+            break;
+         case JSON:
+            marshaller = jsonMarshaller;
+            break;
+         case FLAT:
+            halt(fmt);
+         default:
+            halt(fmt);
+      }
+      return marshaller;
+   }
 
-	private void halt(DataFormat fmt) throws ServiceHosterException {
-		ExceptionUtil.throwAsServiceHosterException("UnSupported Data Format : " + fmt);
-	}
+   private void halt(DataFormat fmt) throws ServiceHosterException {
+      ExceptionUtil.throwAsServiceHosterException("UnSupported Data Format : " + fmt);
+   }
 }

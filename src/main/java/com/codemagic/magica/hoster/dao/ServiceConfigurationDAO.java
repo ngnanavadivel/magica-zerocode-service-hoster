@@ -7,5 +7,6 @@ import com.codemagic.magica.hoster.model.ServiceConfiguration;
 
 @Component
 public interface ServiceConfigurationDAO {
-	ServiceConfiguration load(String clientId, String serviceId, String version, String resourceDiscriminator) throws ServiceHosterException;
+   ServiceConfiguration load(String clientId, String serviceId, String version, String resourceDiscriminator)
+         throws ServiceHosterException;
 }

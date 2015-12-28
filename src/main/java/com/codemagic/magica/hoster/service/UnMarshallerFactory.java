@@ -9,28 +9,28 @@ import com.codemagic.magica.hoster.model.ServiceConfiguration.DataFormat;
 
 @Component
 public class UnMarshallerFactory {
-	@Autowired
-	XMLUnMarshaller xmlUnMarshaller;
-	
-	@Autowired
-	JSONUnMarshaller jsonUnMarshaller;
-	
-	public DataUnMarshaller getUnMarshaller(DataFormat fmt) throws ServiceHosterException {
-		DataUnMarshaller unMarshaller = null;
-		switch(fmt) {
-			case XML:
-				unMarshaller = xmlUnMarshaller;
-				break;
-			case JSON:
-				unMarshaller = jsonUnMarshaller;
-				break;
-			case FLAT:
-				halt(fmt);
-		}
-		return unMarshaller;
-	}
-	
-	private void halt(DataFormat fmt) throws ServiceHosterException {
-		ExceptionUtil.throwAsServiceHosterException("UnSupported Data Format : " + fmt);
-	}
+   @Autowired
+   JSONUnMarshaller jsonUnMarshaller;
+
+   @Autowired
+   XMLUnMarshaller xmlUnMarshaller;
+
+   public DataUnMarshaller getUnMarshaller(DataFormat fmt) throws ServiceHosterException {
+      DataUnMarshaller unMarshaller = null;
+      switch (fmt) {
+         case XML:
+            unMarshaller = xmlUnMarshaller;
+            break;
+         case JSON:
+            unMarshaller = jsonUnMarshaller;
+            break;
+         case FLAT:
+            halt(fmt);
+      }
+      return unMarshaller;
+   }
+
+   private void halt(DataFormat fmt) throws ServiceHosterException {
+      ExceptionUtil.throwAsServiceHosterException("UnSupported Data Format : " + fmt);
+   }
 }

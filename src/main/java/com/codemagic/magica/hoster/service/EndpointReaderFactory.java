@@ -9,26 +9,26 @@ import com.codemagic.magica.hoster.model.ServiceConfiguration.EndpointType;
 
 @Component
 public class EndpointReaderFactory {
-	@Autowired
-	HttpEndpointReader httpEndpointReader;
+   @Autowired
+   HttpEndpointReader httpEndpointReader;
 
-	public EndpointReader getReader(EndpointType type) throws ServiceHosterException {
-		EndpointReader reader = null;
-		switch (type) {
-			case HTTP:
-				reader = httpEndpointReader;
-				break;
-			case FTP:
-				halt(type);
-			case JMS:
-				halt(type);
-			default:
-				halt(type);
-		}
-		return reader;
-	}
+   public EndpointReader getReader(EndpointType type) throws ServiceHosterException {
+      EndpointReader reader = null;
+      switch (type) {
+         case HTTP:
+            reader = httpEndpointReader;
+            break;
+         case FTP:
+            halt(type);
+         case JMS:
+            halt(type);
+         default:
+            halt(type);
+      }
+      return reader;
+   }
 
-	private void halt(EndpointType sourceEndpointType) throws ServiceHosterException {
-		ExceptionUtil.throwAsServiceHosterException("UnSupported Endpoint Type : " + sourceEndpointType);
-	}
+   private void halt(EndpointType sourceEndpointType) throws ServiceHosterException {
+      ExceptionUtil.throwAsServiceHosterException("UnSupported Endpoint Type : " + sourceEndpointType);
+   }
 }

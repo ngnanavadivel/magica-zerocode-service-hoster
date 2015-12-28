@@ -10,11 +10,12 @@ import com.codemagic.magica.hoster.model.ServiceConfiguration;
 
 @Component
 public class ServiceConfigManager {
-	@Autowired
-	@Qualifier("local")
-	ServiceConfigurationDAO configDAO;
-	
-	public ServiceConfiguration load(String clientId, String serviceId, String version, String resourceDiscriminator) throws ServiceHosterException {
-		return configDAO.load(clientId, serviceId, version, resourceDiscriminator);
-	}
+   @Autowired
+   @Qualifier("local")
+   ServiceConfigurationDAO configDAO;
+
+   public ServiceConfiguration load(String clientId, String serviceId, String version, String resourceDiscriminator)
+         throws ServiceHosterException {
+      return configDAO.load(clientId, serviceId, version, resourceDiscriminator);
+   }
 }

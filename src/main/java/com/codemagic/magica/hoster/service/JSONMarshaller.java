@@ -9,16 +9,16 @@ import com.codemagic.magica.hoster.common.util.ExceptionUtil;
 @Component
 public class JSONMarshaller implements DataMarshaller {
 
-	public String serializeToString(Object pojo) throws ServiceHosterException {
-		String json = null;
-		try {
-			ObjectMapper mpr = new ObjectMapper();
-			json = mpr.writerWithDefaultPrettyPrinter().writeValueAsString(pojo);
-			System.out.println(json);
-		} catch (Exception e) {
-			ExceptionUtil.wrapAndThrowAsServiceHosterException(e);
-		}
-		return json;
-	}
+   public String serializeToString(Object pojo) throws ServiceHosterException {
+      String json = null;
+      try {
+         ObjectMapper mpr = new ObjectMapper();
+         json = mpr.writerWithDefaultPrettyPrinter().writeValueAsString(pojo);
+         System.out.println(json);
+      } catch (Exception e) {
+         ExceptionUtil.wrapAndThrowAsServiceHosterException(e);
+      }
+      return json;
+   }
 
 }
